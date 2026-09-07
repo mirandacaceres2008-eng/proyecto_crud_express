@@ -10,6 +10,20 @@ const sistemaArchivos = require("fs");
 const ruta = require("path");
 const rutaMiArchivo =ruta.join(__dirname, "datos.json");
 
+//import Multer (ES PARA PONER IMAGENES EN EL SERVIDOR)
+const multer = require("multer");
+//Almacenamiento
+const Almacen = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, "misimagenes/");
+    },
+    filename: (req, file, cb) => {
+        const extension = ruta.extname(file.originalname);
+        cb(null, `${Date.now()}${extension}`)},
+    
+});
+//CONFIGURAR EL ALMACENAMIENTO PARA Q SE SUBA EN EL POST)
+const Subir =multer({ storage: Almacen });
 //middleware body parser
 
 // app.get('/', (req, res) => {
@@ -24,8 +38,9 @@ app.get('/api/aprendices', (req, res) => {
 
 });
 
-app.post('/api/aprendices', (req, res) => {
+app.post('/api/aprendices', Subir.single('imagen'), (req, res) => {
     const datosAprendiz = req.body;
+    datosAprendiz.imagen = req.file?`/misimagenes/${req.file.filename}` : "Sin imagen"
     sistemaArchivos.readFile(rutaMiArchivo, "utf-8", (error, datos) => {
         if (error)  res.status(500).json({ error: 'no se puede leer el archivo' });
         const listaAprendices =JSON.parse(datos);

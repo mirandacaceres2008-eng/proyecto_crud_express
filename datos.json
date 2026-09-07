@@ -36,5 +36,19 @@
     "correo": "mari@gmail.com",
     "clave": "l9877",
     "imagen": ""
+  },
+  {
+    "nombre": "Miranda",
+    "edad": "20",
+    "correo": "miranda@gmail.com",
+    "clave": "G6549",
+    "imagen": "/misimagenes/1788797858307.avif"
+  },
+  {
+    "nombre": "Cristian",
+    "edad": "22",
+    "correo": "Cris@gmail.com",
+    "clave": "H8790",
+    "imagen": "/misimagenes/1788797945127.avif"
   }
 ]
