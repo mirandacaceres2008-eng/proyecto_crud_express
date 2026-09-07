@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const app = express();
-
+//puerto
 const PUERTO = process.env.MIPUERTO || 3003;
 
 app.get('/', (req, res) => {
