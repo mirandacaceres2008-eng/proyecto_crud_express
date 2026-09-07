@@ -2,38 +2,50 @@ const express = require('express');
 require('dotenv').config();
 
 const app = express();
-
-const PUERTO = process.env.MIPUERTO || 3003;
-// Middleware body-parse
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+const PUERTO = process.env.MIPUERTO || 3003;
+//librerias fs, path
+const sistemaArchivos = require("fs");
+const ruta = require("path");
+const rutaMiArchivo =ruta.join(__dirname, "datos.json");
 
-app.get('/', (req, res) => {
-    res.send('API REST full con Express');
-});
+//middleware body parser
+
+// app.get('/', (req, res) => {
+    //res.send('API Rest Full con expres');});
 
 app.get('/api/aprendices', (req, res) => {
-    res.status(200).json({ message: 'lista aprendices' });
+   // res.status(200).json({ mensaje: 'Lista Aprendices' });
+    sistemaArchivos.readFile(rutaMiArchivo, "utf-8", (error, datos) => {
+        if (error)  res.status(500).json({ error: 'no se puede leer el archivo' });
+        const listaAprendices = JSON.parse(datos);
+        res.status(200).json({ listado: listaAprendices});});
+
 });
 
 app.post('/api/aprendices', (req, res) => {
-    const datosAprendiz = req.body
-    const edad=req.body.edad
+    const datosAprendiz = req.body;
+    sistemaArchivos.readFile(rutaMiArchivo, "utf-8", (error, datos) => {
+        if (error)  res.status(500).json({ error: 'no se puede leer el archivo' });
+        const listaAprendices =JSON.parse(datos);
+        listaAprendices.push(datosAprendiz);
+        sistemaArchivos.writeFile(rutaMiArchivo, JSON.stringify(listaAprendices, null, 2), (error) => {
+            if (error)  res.status(500).json({ error: 'no se puede escribir en le file' });
+            res.status(200).json({ mensaje: "creado", Datos: datosAprendiz });});
+        });
 
-    if(edad < 18){
-        return res.status(201).json({ message: "crear aprendices", Datos: datosAprendiz, edad:"Eres menor de edad" });
-    } else{
-        return res.status(201).json({ message: "crear aprendices", Datos: datosAprendiz, edad:"Eres mayor de edad" });
-    }});
+
+});
 
 app.put('/api/aprendices/:id', (req, res) => {
-    res.status(200).json({ message: 'actualizar aprendiz' });
+    res.status(200).json({ mensaje: 'actualizar aprendiz' });
 });
 
 app.delete('/api/aprendices/:id', (req, res) => {
-    res.status(200).json({ message: 'eliminado' });
+    res.status(200).json({ mensaje: 'eliminar aprendiz' });
 });
 
 app.listen(PUERTO, () => {
     console.log(`Servidor ejecutándose en http://localhost:${PUERTO}`);
 });
-

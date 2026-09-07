@@ -1,0 +1,40 @@
+[
+  {
+    "nombre": "Emily",
+    "edad": 17,
+    "corro": "mirandacaceres2008@gmail.com",
+    "imagen": "url",
+    "clave": "x123"
+  },
+  null,
+  null,
+  {
+    "nombre": "Emily",
+    "edad": 17,
+    "corro": "mirandacaceres2008@gmail.com",
+    "imagen": "url",
+    "clave": "x123"
+  },
+  {
+    "nombre": "Emily",
+    "edad": 17,
+    "corro": "mirandacaceres2008@gmail.com",
+    "imagen": "url",
+    "clave": "888888"
+  },
+  {
+    "nombre": "Daniel",
+    "edad": 18,
+    "corro": "mirandacaceres2008@gmail.com",
+    "imagen": "url",
+    "clave": "9806"
+  },
+  null,
+  {
+    "Nombre": "mariana",
+    "edad": "23",
+    "correo": "mari@gmail.com",
+    "clave": "l9877",
+    "imagen": ""
+  }
+]
