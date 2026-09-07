@@ -50,5 +50,12 @@
     "correo": "Cris@gmail.com",
     "clave": "H8790",
     "imagen": "/misimagenes/1788797945127.avif"
+  },
+  {
+    "nombre": "Jaime",
+    "edad": "18",
+    "correo": "jaimeJS@gmail.com",
+    "clave": "h4380",
+    "imagen": "/misimagenes/1788798805746.webp"
   }
 ]
