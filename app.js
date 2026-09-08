@@ -10,6 +10,13 @@ const sistemaArchivos = require("fs");
 const ruta = require("path");
 const rutaMiArchivo =ruta.join(__dirname, "datos.json");
 
+
+//AGREGO CORREO, ID Y NOMBRE
+
+// Validaciones
+const { validarNombre, validarCorreo, validarId } = require("./Validaciones/validacion");
+
+
 //import Multer (ES PARA PONER IMAGENES EN EL SERVIDOR)
 const multer = require("multer");
 //Almacenamiento
@@ -40,6 +47,30 @@ app.get('/api/aprendices', (req, res) => {
 
 app.post('/api/aprendices', Subir.single('imagen'), (req, res) => {
     const datosAprendiz = req.body;
+
+//AGREGO VALIDACION DEL CORREO, ID Y NOMBRE
+    // Validar nombre
+    if (!validarNombre(datosAprendiz.nombre)) {
+        return res.status(400).json({
+            error: "El nombre debe tener mínimo 3 letras"
+        });
+    }
+
+    // Validar correo
+    if (!validarCorreo(datosAprendiz.correo)) {
+        return res.status(400).json({
+            error: "El correo no tiene un formato válido"
+        });
+    }
+
+    // Validar ID
+    if (!validarId(datosAprendiz.id)) {
+        return res.status(400).json({
+            error: "El ID es obligatorio"
+        });
+    }
+
+    
     datosAprendiz.imagen = req.file?`/misimagenes/${req.file.filename}` : "Sin imagen"
     sistemaArchivos.readFile(rutaMiArchivo, "utf-8", (error, datos) => {
         if (error)  res.status(500).json({ error: 'no se puede leer el archivo' });

@@ -57,5 +57,11 @@
     "correo": "jaimeJS@gmail.com",
     "clave": "h4380",
     "imagen": "/misimagenes/1788798805746.webp"
+  },
+  {
+    "id": "2",
+    "nombre": "Ana",
+    "correo": "ana@gmail.com",
+    "imagen": "Sin imagen"
   }
 ]
