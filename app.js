@@ -2,10 +2,21 @@ const express = require('express');
 require('dotenv').config();
 
 const app = express();
+
+//middleware body-parese
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const PUERTO = process.env.MIPUERTO || 3003;
-//librerias fs, path
+
+//importar mis middleware
+const registroMiddleware = require("./middleware/registroMiddeleware");
+const manejadorErroresMiddlewares = require("./middleware/manejadorErroresMiddleware");
+//usar nuestro middleware
+app.use(registroMiddleware);
+
+
+
+// //librerias fs, path
 const sistemaArchivos = require("fs");
 const ruta = require("path");
 const rutaMiArchivo =ruta.join(__dirname, "datos.json");
@@ -32,6 +43,7 @@ const Almacen = multer.diskStorage({
 //CONFIGURAR EL ALMACENAMIENTO PARA Q SE SUBA EN EL POST)
 const Subir =multer({ storage: Almacen });
 //middleware body parser
+
 
 // app.get('/', (req, res) => {
     //res.send('API Rest Full con expres');});
@@ -91,6 +103,11 @@ app.put('/api/aprendices/:id', (req, res) => {
 app.delete('/api/aprendices/:id', (req, res) => {
     res.status(200).json({ mensaje: 'eliminar aprendiz' });
 });
+
+//provocando un error
+app.get("/api/error", (req, res, next) => {next(new Error("Este es un error provocado")
+)});
+app.use(manejadorErroresMiddlewares);
 
 app.listen(PUERTO, () => {
     console.log(`Servidor ejecutándose en http://localhost:${PUERTO}`);
