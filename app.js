@@ -2,15 +2,21 @@ const express = require('express');
 require('dotenv').config();
 
 const app = express();
+const PUERTO = process.env.MIPUERTO || 3003;
+const jwtoken = require("jsonwebtoken")
+
+
+//importar mis middleware
+const registroMiddleware = require("./src/middleware/registroMiddeleware");
+const manejadorErroresMiddlewares = require("./src/middleware/manejadorErroresMiddleware");
+const autenticacionMiddleware = require("./src/middleware/autenticacionMiddleware");
 
 //middleware body-parese
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-const PUERTO = process.env.MIPUERTO || 3003;
 
-//importar mis middleware
-const registroMiddleware = require("./middleware/registroMiddeleware");
-const manejadorErroresMiddlewares = require("./middleware/manejadorErroresMiddleware");
+
+
 //usar nuestro middleware
 app.use(registroMiddleware);
 
@@ -40,9 +46,9 @@ const Almacen = multer.diskStorage({
         cb(null, `${Date.now()}${extension}`)},
     
 });
+
 //CONFIGURAR EL ALMACENAMIENTO PARA Q SE SUBA EN EL POST)
 const Subir =multer({ storage: Almacen });
-//middleware body parser
 
 
 // app.get('/', (req, res) => {
@@ -107,8 +113,38 @@ app.delete('/api/aprendices/:id', (req, res) => {
 //provocando un error
 app.get("/api/error", (req, res, next) => {next(new Error("Este es un error provocado")
 )});
-app.use(manejadorErroresMiddlewares);
 
+
+//ruta protegida, para acceder con token, permisos de usuario
+app.get ("/api/rutaprotegida", autenticacionMiddleware, (req,res) => {
+    res.json({mensaje: "Ruta protegida, acceso con token"})
+});
+
+
+//ENDPOINT O RUTA DE INICIO DE SESION PARA GENERAR UN TOKEN
+app.post("/api/login", (req, res) => {
+   //capturar datos del usuario
+   const {usuario, clave}= req.body
+   //simular datos de usuario en la base de datos
+   const bdUsuario = {"usuario": "Emily", "clave":"abc123"}
+   //validar datos
+   if (usuario !== bdUsuario.usuario || clave !== bdUsuario.clave)
+   {
+    res.json({mensaje: "usuario y/o clave incorrecta!!"});
+   }
+   //verificacion y generacion del token
+   const token = jwtoken.sign(
+    {user: req.usuario},
+    process.env.JWT_SECRETO,
+    {expiresIn: "1h"},
+   );
+   res.json ({token});
+   });
+
+app.use(manejadorErroresMiddlewares);
 app.listen(PUERTO, () => {
     console.log(`Servidor ejecutándose en http://localhost:${PUERTO}`);
 });
+
+
+
